@@ -29,10 +29,10 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh 'cp logos/logo-main.svg src/assets/logo.svg'
+                        sh 'cp logos/logo-main.svg src/logo.svg'
                         env.PORT = '3000'
                     } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'cp logos/logo-dev.svg src/assets/logo.svg'
+                        sh 'cp logos/logo-dev.svg src/logo.svg'
                         env.PORT = '3001'
                     }
                 }
