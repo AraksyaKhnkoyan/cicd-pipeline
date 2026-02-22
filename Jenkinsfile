@@ -18,10 +18,10 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == 'main') {
                         env.PORT = "3000"
-                        sh 'cp logos/main_logo.svg src/logo.svg'
+                        sh 'cp logos/logo.svg src/logo.svg'
                     } else if (env.BRANCH_NAME == 'dev') {
                         env.PORT = "3001"
-                        sh 'cp logos/dev_logo.svg src/logo.svg'
+                        sh 'cp logos/logo.svg src/logo.svg'
                     }
                 }
             }
