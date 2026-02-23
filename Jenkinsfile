@@ -1,8 +1,8 @@
 pipeline {
     agent any
 
-    environment {
-        NODEJS_HOME = tool name: 'Node 7.8.0', type: 'NodeJS'
+    tools {
+        nodejs 'node'   // MUST match the name exactly: node
     }
 
     stages {
@@ -29,10 +29,8 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh 'cp logos/logo-main.svg src/logo.svg'
                         env.PORT = '3000'
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'cp logos/logo-dev.svg src/logo.svg'
+                    } else {
                         env.PORT = '3001'
                     }
                 }
@@ -47,7 +45,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh "docker run -d -p ${env.PORT}:${env.PORT} myapp:${env.BRANCH_NAME}"
+                sh """
+                docker rm -f myapp-${env.BRANCH_NAME} || true
+                docker run -d --name myapp-${env.BRANCH_NAME} -p ${env.PORT}:${env.PORT} myapp:${env.BRANCH_NAME}
+                """
             }
         }
     }
