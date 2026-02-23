@@ -2,10 +2,15 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'node'   // MUST match the name exactly: node
+        nodejs 'node'   // Must match exactly the name in Global Tool Configuration
+    }
+
+    environment {
+        IMAGE_NAME = "myapp"
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -25,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Change Logo & Set Port') {
+        stage('Set Port') {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
@@ -39,15 +44,18 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t myapp:${env.BRANCH_NAME} ."
+                sh "docker build -t ${IMAGE_NAME}:${env.BRANCH_NAME} ."
             }
         }
 
         stage('Deploy') {
             steps {
                 sh """
-                docker rm -f myapp-${env.BRANCH_NAME} || true
-                docker run -d --name myapp-${env.BRANCH_NAME} -p ${env.PORT}:${env.PORT} myapp:${env.BRANCH_NAME}
+                docker rm -f ${IMAGE_NAME}-${env.BRANCH_NAME} || true
+                docker run -d \
+                  --name ${IMAGE_NAME}-${env.BRANCH_NAME} \
+                  -p ${env.PORT}:${env.PORT} \
+                  ${IMAGE_NAME}:${env.BRANCH_NAME}
                 """
             }
         }
