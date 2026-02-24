@@ -54,7 +54,7 @@ pipeline {
                 docker rm -f ${IMAGE_NAME}-${env.BRANCH_NAME} || true
                 docker run -d \
                   --name ${IMAGE_NAME}-${env.BRANCH_NAME} \
-                  -p ${env.PORT}:${env.PORT} \
+                  -p ${env.PORT}:3000 \
                   ${IMAGE_NAME}:${env.BRANCH_NAME}
                 """
             }
