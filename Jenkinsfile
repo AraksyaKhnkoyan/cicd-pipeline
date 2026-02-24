@@ -47,7 +47,7 @@ pipeline {
             steps {
                 sh """
                 docker rm -f myapp-${env.BRANCH_NAME} || true
-                docker run -d --name myapp-${env.BRANCH_NAME} -p ${env.PORT}:${env.PORT} myapp:${env.BRANCH_NAME}
+                docker run -d --name myapp-${env.BRANCH_NAME} -p ${env.PORT}:3000 myapp:${env.BRANCH_NAME}
                 """
             }
         }
